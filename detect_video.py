@@ -23,6 +23,9 @@ flags.DEFINE_string(
 )
 flags.DEFINE_integer("num_classes", 80, "number of classes in the model")
 
+found_cards=[]
+found_cards_strings=[]
+
 
 def main(_argv):
     physical_devices = tf.config.experimental.list_physical_devices("GPU")
@@ -87,20 +90,22 @@ def main(_argv):
         )
 
         boxes, scores, classes, nums = boxes[0], scores[0], classes[0], nums[0]
-        found_cards=[]
-        found_cards_strings=[]
+
+        if nums==0:
+            found_cards=[]
+            found_cards_strings=[]
+
         for i in range(nums):
 
             card_name = class_names[int(classes[i])]
             #print(card_name)
-            if card_name not in found_cards_strings:
+            if card_name not in found_cards_strings and scores[i]>=0.8:
                 found_cards_strings.append(card_name)
                 splitted_card_name=card_name.split('-', 2)
                 #print(splitted_card_name)
                 card = poker_card(Ranks[splitted_card_name[0]], Suits[splitted_card_name[1]])
                 found_cards.append(card)
                 #print(class_names[int(classes[i])])
-
         actualHand=Hand(found_cards)
         actualHand.print_hand()
         #print(actualHand.get_highest())
