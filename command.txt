@@ -1,0 +1,5 @@
+conda activate yolov3-tf2-gpu
+
+cd C:\Users\mirko\Desktop\YOLO-Object-Detection-python
+
+python detect_video.py --video 0 --weights ./checkpoints/yolov3-cardgame.tf --num_classes 52
