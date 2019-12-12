@@ -1,9 +1,8 @@
 from enum import Enum
-import Cards
 
 
-Ranks = Enum('Ranks', 'one two three four five six seven eight nine ten jack queen king ace none')
-Suits = Enum('Suits','hearts diamonds clubs spades none')
+Ranks = Enum('Ranks', 'One Two Three Four Five Six Seven Eight Nine Ten Jack Queen King Ace none')
+Suits = Enum('Suits','Hearts Diamonds Clubs Spades none')
 Hands = Enum('Hands', 'high_card pair two_pair trips straight flush full_house quads straight_flush royal_flush none')
 
 class poker_card:
@@ -13,7 +12,7 @@ class poker_card:
         self.rank = rank
         self.suit = suit
     def display(self):
-        print(self.rank.name + " of " + self.suit.name)
+        return self.rank.name + " of " + self.suit.name
 
 
     
@@ -33,8 +32,10 @@ class Hand:
             return False
 
     def print_hand(self):
+        handcards=''
         for c in self.poker_cards:
-            c.display()
+            handcards = handcards + c.display() + ', '
+        print('Your Hand: ' + handcards)
 
     def is_straight(self):
         poker_card_values=[]
@@ -109,26 +110,4 @@ class Hand:
         for c in self.poker_cards:
             poker_card_values.append(c.rank.value)
         poker_card_values.sort()
-        return poker_card_values[4]
-
-
-
-
-
-        
-            
-                
-
-          
-
-
-   
-
-
-
-
-#functions
-
-
-
-        
+        return poker_card_values[4] 
