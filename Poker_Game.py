@@ -2,7 +2,7 @@ from enum import Enum
 
 
 Ranks = Enum('Ranks', 'One Two Three Four Five Six Seven Eight Nine Ten Jack Queen King Ace none')
-Suits = Enum('Suits','Hearts Diamonds Clubs Spades none')
+Suits = Enum('Suits', 'Hearts Diamonds Clubs Spades none')
 Hands = Enum('Hands', 'high_card pair two_pair trips straight flush full_house quads straight_flush royal_flush none')
 
 class poker_card:
@@ -63,7 +63,11 @@ class Hand:
         return counter
 
     def is_royal(self):
-        if self.poker_cards[0].value == 10 and self.poker_cards[1].rank.value == 11 and self.poker_card[2].rank.value == 12 and self.poker_cards[3].rank.value == 13 and self.poker_card[4].rank.value == 14:
+        poker_card_values=[]
+        for c in self.poker_cards:
+            poker_card_values.append(c.rank.value)
+        poker_card_values.sort()
+        if poker_card_values[0] == 10 and poker_card_values[1] == 11 and poker_card_values[2] == 12 and poker_card_values[3] == 13 and poker_card_values[4] == 14:
             return True
         else:
             return False
@@ -111,3 +115,34 @@ class Hand:
             poker_card_values.append(c.rank.value)
         poker_card_values.sort()
         return poker_card_values[4] 
+
+    def get_hand(self):
+        if self.is_royal() and self.is_flush():
+            self.name = Hands.royal_flush.name
+            
+        elif self.is_straight_flush():
+            self.name = Hands.straight_flush.name
+            
+        elif self.is_quads():
+            self.name = Hands.quads.name
+            
+        elif self.is_trips() and self.is_pair():
+            self.name = Hands.full_house.name
+            
+        elif self.is_flush():
+            self.name = Hands.flush.name
+            
+        elif self.is_straight():
+            self.name = Hands.straight.name
+            
+        elif self.is_trips():
+            self.name = Hands.trips.name
+            
+        elif self.is_two_pair():
+            self.name = Hands.two_pair.name
+            
+        elif self.is_pair():
+            self.name = Hands.pair.name
+            
+        else:
+            self.name = Hands.high_card.name
