@@ -99,7 +99,8 @@ def main(_argv):
 
             card_name = class_names[int(classes[i])]
             #print(card_name)
-            if card_name not in found_cards_strings and scores[i]>=0.8:
+            if card_name not in found_cards_strings and scores[i]>=0.95:
+                #print(scores[i])
                 found_cards_strings.append(card_name)
                 splitted_card_name=card_name.split('-', 2)
                 #print(splitted_card_name)
@@ -108,6 +109,7 @@ def main(_argv):
                 #print(class_names[int(classes[i])])
         actualHand=Hand(found_cards)
         actualHand.print_hand()
+        print(actualHand.get_hand())
         #print(actualHand.get_highest())
         #print(actualHand.is_straight_flush())
 

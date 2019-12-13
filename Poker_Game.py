@@ -25,11 +25,11 @@ class Hand:
     def __init__(self, poker_cards):
         self.poker_cards = poker_cards
 
-    def is_hand(self):
+    '''def is_hand(self):
         if len(self.poker_cards) == 5:
             return True
         else:
-            return False
+            return False'''
 
     def print_hand(self):
         handcards=''
@@ -39,38 +39,46 @@ class Hand:
 
     def is_straight(self):
         poker_card_values=[]
-        for c in self.poker_cards:
-            poker_card_values.append(c.rank.value)
-        poker_card_values.sort()
+        if self.poker_cards and len(self.poker_cards)>=5:
+    
+            for c in self.poker_cards:
+                poker_card_values.append(c.rank.value)
+            poker_card_values.sort()
 
-        for i in range(4):
-            if poker_card_values[i] != poker_card_values[i+1]-1:
-                return False
-        return True
+            for i in range(4):
+                if poker_card_values[i] != poker_card_values[i+1]-1:
+                    return False
+            return True
+        return False
             
     def count_rank(self,rank):
         counter = 0
-        for c in self.poker_cards:
-            if c.rank == rank:
-                counter+=1
+        if self.poker_cards:
+            for c in self.poker_cards:
+                if c.rank == rank:
+                    counter+=1
         return counter
 
     def count_suits(self,suit):
         counter = 0
-        for c in self.poker_cards:
-            if c.suit == suit:
-                counter+=1
+        if self.poker_cards:
+            for c in self.poker_cards:
+                if c.suit == suit:
+                    counter+=1
         return counter
 
     def is_royal(self):
         poker_card_values=[]
-        for c in self.poker_cards:
-            poker_card_values.append(c.rank.value)
-        poker_card_values.sort()
-        if poker_card_values[0] == 10 and poker_card_values[1] == 11 and poker_card_values[2] == 12 and poker_card_values[3] == 13 and poker_card_values[4] == 14:
-            return True
-        else:
-            return False
+        
+        if self.poker_cards and len(self.poker_cards)>=5:
+            for c in self.poker_cards:
+                poker_card_values.append(c.rank.value)
+            poker_card_values.sort()
+            if poker_card_values[0] == 10 and poker_card_values[1] == 11 and poker_card_values[2] == 12 and poker_card_values[3] == 13 and poker_card_values[4] == 14:
+                return True
+            else:
+                return False
+        return False
 
     def is_flush(self):
         for s in Suits:
@@ -111,10 +119,12 @@ class Hand:
 
     def get_highest(self):
         poker_card_values=[]
-        for c in self.poker_cards:
-            poker_card_values.append(c.rank.value)
-        poker_card_values.sort()
-        return poker_card_values[4] 
+        if self.poker_cards:
+            for c in self.poker_cards:
+                poker_card_values.append(c.rank.value)
+            poker_card_values.sort()
+            return poker_card_values[4] 
+        return None
 
     def get_hand(self):
         if self.is_royal() and self.is_flush():
@@ -146,3 +156,5 @@ class Hand:
             
         else:
             self.name = Hands.high_card.name
+
+        return self.name
