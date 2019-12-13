@@ -5,6 +5,7 @@
 /logs/
 /Untitled.ipynb
 /output.jpg
+*_venv/
 
 # Created by https://www.gitignore.io/api/python
 # Edit at https://www.gitignore.io/?templates=python
