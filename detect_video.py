@@ -28,6 +28,7 @@ found_cards=[]
 found_cards_strings=[]
 timer_running=False
 nb_of_cards=0
+time_to_wait_for_clear=10
 
 
 def test():
@@ -115,7 +116,7 @@ def main(_argv):
 
         if nums==0:
             if timer_running==False:
-                timer = Timer(5.0, test) 
+                timer = Timer(time_to_wait_for_clear, test) 
                 timer.start() 
                 timer_running=True
         else:
