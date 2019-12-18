@@ -82,7 +82,7 @@ class Hand:
 
     def is_flush(self):
         for s in Suits:
-            if self.count_suits(s) == 5:
+            if self.count_suits(s) >= 5:
                 return True
         return False
 
