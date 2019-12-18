@@ -9,6 +9,7 @@ from Poker_Game import poker_card, Hand, Ranks, Suits, Hands
 from yolov3_tf2.dataset import transform_images
 from yolov3_tf2.models import YoloV3, YoloV3Tiny
 from yolov3_tf2.utils import draw_outputs
+from threading import Timer
 
 flags.DEFINE_string("classes", "./data/coco.names", "path to classes file")
 flags.DEFINE_string("weights", "./checkpoints/yolov3.tf", "path to weights file")
@@ -25,9 +26,27 @@ flags.DEFINE_integer("num_classes", 80, "number of classes in the model")
 
 found_cards=[]
 found_cards_strings=[]
+timer_running=False
+nb_of_cards=0
+
+
+def test():
+    global found_cards, found_cards_strings, nb_of_cards, timer_running
+
+    found_cards=[]
+    found_cards_strings=[]
+    print("No cards found, resetted!")
+    timer_running = False
+    nb_of_cards = 0
+
+    
 
 
 def main(_argv):
+
+    global timer_running, found_cards, found_cards_strings, nb_of_cards
+
+
     physical_devices = tf.config.experimental.list_physical_devices("GPU")
     if len(physical_devices) > 0:
         tf.config.experimental.set_memory_growth(physical_devices[0], True)
@@ -59,6 +78,9 @@ def main(_argv):
         fps = int(vid.get(cv2.CAP_PROP_FPS))
         codec = cv2.VideoWriter_fourcc(*FLAGS.output_format)
         out = cv2.VideoWriter(FLAGS.output, codec, fps, (width, height))
+    
+    #timer = Timer(5.0, test) 
+
 
     while True:
         _, img = vid.read()
@@ -92,8 +114,14 @@ def main(_argv):
         boxes, scores, classes, nums = boxes[0], scores[0], classes[0], nums[0]
 
         if nums==0:
-            found_cards=[]
-            found_cards_strings=[]
+            if timer_running==False:
+                timer = Timer(5.0, test) 
+                timer.start() 
+                timer_running=True
+        else:
+            timer.cancel()
+            timer_running=False
+
 
         for i in range(nums):
 
@@ -107,9 +135,13 @@ def main(_argv):
                 card = poker_card(Ranks[splitted_card_name[0]], Suits[splitted_card_name[1]])
                 found_cards.append(card)
                 #print(class_names[int(classes[i])])
-        actualHand=Hand(found_cards)
-        actualHand.print_hand()
-        print(actualHand.get_hand())
+        if len(found_cards_strings) > nb_of_cards:
+            actualHand=Hand(found_cards)
+            actualHand.print_hand()
+            print(actualHand.get_hand())
+            nb_of_cards = len(found_cards_strings)
+
+
         #print(actualHand.get_highest())
         #print(actualHand.is_straight_flush())
 
@@ -117,6 +149,8 @@ def main(_argv):
             out.write(img)
         cv2.imshow("output", img)
         if cv2.waitKey(1) == ord("q"):
+            timer.cancel()
+            timer_running=False
             break
 
     cv2.destroyAllWindows()
