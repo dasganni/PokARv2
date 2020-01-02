@@ -34,6 +34,8 @@ nb_of_cards=0
 time_to_wait_for_clear=10
 input_image=cv2.VideoCapture().read
 input_image2=cv2.VideoCapture().read
+parsed_image=None
+exit_program=False
 
 
 
@@ -48,7 +50,7 @@ def test_for_reset():
 
 def show_changed_image(out):
 
-    global found_cards, found_cards_strings, nb_of_cards, timer_running
+    global timer_running, found_cards, found_cards_strings, nb_of_cards, parsed_image
 
 
     if FLAGS.tiny:
@@ -137,20 +139,19 @@ def show_changed_image(out):
         if FLAGS.output:
             out.write(img)
 
-        cv2.imshow("Parsed Image", img)
+        parsed_image = img
 
 
-        if cv2.waitKey(1) == ord("q"):
+        if exit_program:
             timer.cancel()
             timer_running=False
             break
         odd_iteration = not odd_iteration
-    cv2.destroyAllWindows()
 
 
 def main(_argv):
 
-    global input_image, input_image2
+    global input_image, input_image2, exit_program
 
     physical_devices = tf.config.experimental.list_physical_devices("GPU")
 
@@ -198,10 +199,14 @@ def main(_argv):
 
         cv2.imshow("Input Image", input_image)
         cv2.imshow("Input Image2", input_image2)
+        
+        if not parsed_image is None:
+    
+            cv2.imshow("Parsed Image", parsed_image)
 
 
         if cv2.waitKey(1) == ord("q"):
-            end_program=True
+            exit_program=True
             break
 
     cv2.destroyAllWindows()
