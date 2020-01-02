@@ -18,6 +18,9 @@ flags.DEFINE_integer("size", 608, "resize images to")
 flags.DEFINE_string(
     "video", "0", "path to video file or number for webcam)"
 )
+flags.DEFINE_string(
+    "video2", "1", "path to video file or number for webcam)"
+)
 flags.DEFINE_string("output", None, "path to output video")
 flags.DEFINE_string(
     "output_format", "XVID", "codec used in VideoWriter when saving video to file"
@@ -30,6 +33,7 @@ timer_running=False
 nb_of_cards=0
 time_to_wait_for_clear=10
 input_image=cv2.VideoCapture().read
+input_image2=cv2.VideoCapture().read
 
 
 
@@ -59,15 +63,23 @@ def show_changed_image(out):
     logging.info("classes loaded")
 
     times = []
+    odd_iteration = True
+    temp_image = input_image
 
     while True:
-    
-        if input_image is None:
+        
+        if not odd_iteration:
+            temp_image = input_image
+        else:
+            temp_image = input_image2
+
+
+        if temp_image is None:
             logging.warning("Empty Frame")
             time.sleep(0.1)
             continue
 
-        img_in = tf.expand_dims(input_image, 0)
+        img_in = tf.expand_dims(temp_image, 0)
         img_in = transform_images(img_in, FLAGS.size)
 
         t1 = time.time()
@@ -76,7 +88,7 @@ def show_changed_image(out):
         times.append(t2 - t1)
         times = times[-20:]
 
-        img = draw_outputs(input_image, (boxes, scores, classes, nums), class_names)
+        img = draw_outputs(temp_image, (boxes, scores, classes, nums), class_names)
 
         img = cv2.putText(
             img,
@@ -118,7 +130,7 @@ def show_changed_image(out):
             print(actualHand.get_hand())
             nb_of_cards = len(found_cards_strings)
 
-
+        
         #print(actualHand.get_highest())
         #print(actualHand.is_straight_flush())
 
@@ -132,13 +144,13 @@ def show_changed_image(out):
             timer.cancel()
             timer_running=False
             break
-
+        odd_iteration = not odd_iteration
     cv2.destroyAllWindows()
 
 
 def main(_argv):
 
-    global input_image
+    global input_image, input_image2
 
     physical_devices = tf.config.experimental.list_physical_devices("GPU")
 
@@ -147,8 +159,11 @@ def main(_argv):
 
     try:
         vid = cv2.VideoCapture(int(FLAGS.video))
+        vid2 = cv2.VideoCapture(int(FLAGS.video2))
     except:
         vid = cv2.VideoCapture(FLAGS.video)
+        vid2 = cv2.VideoCapture(FLAGS.video2)
+
 
     out = None
 
@@ -161,6 +176,8 @@ def main(_argv):
         out = cv2.VideoWriter(FLAGS.output, codec, fps, (width, height))
     
     _, input_image = vid.read()
+    _, input_image2 = vid2.read()
+
 
     t = Thread(target=show_changed_image, args=[out])
     t.start()
@@ -172,8 +189,15 @@ def main(_argv):
             time.sleep(0.1)
             continue
 
+        _, input_image2 = vid2.read()
+        if input_image is None:
+            logging.warning("Empty Frame")
+            time.sleep(0.1)
+            continue
+
 
         cv2.imshow("Input Image", input_image)
+        cv2.imshow("Input Image2", input_image2)
 
 
         if cv2.waitKey(1) == ord("q"):
