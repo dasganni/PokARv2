@@ -32,12 +32,11 @@ found_cards_strings=[]
 timer_running=False
 nb_of_cards=0
 time_to_wait_for_clear=10
-input_image=cv2.VideoCapture().read
-input_image2=cv2.VideoCapture().read
+input_image=None
+input_image2=None
 parsed_image=None
+parsed_image2=None
 exit_program=False
-
-
 
 def test_for_reset():
     global found_cards, found_cards_strings, nb_of_cards, timer_running
@@ -50,7 +49,7 @@ def test_for_reset():
 
 def show_changed_image(out):
 
-    global timer_running, found_cards, found_cards_strings, nb_of_cards, parsed_image
+    global timer_running, found_cards, found_cards_strings, nb_of_cards, parsed_image, parsed_image2
 
 
     if FLAGS.tiny:
@@ -139,7 +138,10 @@ def show_changed_image(out):
         if FLAGS.output:
             out.write(img)
 
-        parsed_image = img
+        if not odd_iteration:
+            parsed_image = temp_image
+        else:
+            parsed_image2 = temp_image
 
 
         if exit_program:
@@ -198,11 +200,13 @@ def main(_argv):
 
 
         cv2.imshow("Input Image", input_image)
-        cv2.imshow("Input Image2", input_image2)
+        cv2.imshow("Input Image 2", input_image2)
         
-        if not parsed_image is None:
+        if not parsed_image is None or not parsed_image is None:
     
             cv2.imshow("Parsed Image", parsed_image)
+            cv2.imshow("Parsed Image 2", parsed_image2)
+
 
 
         if cv2.waitKey(1) == ord("q"):
