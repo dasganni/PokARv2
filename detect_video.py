@@ -9,29 +9,31 @@ from Poker_Game import poker_card, Hand, Ranks, Suits, Hands
 from yolov3_tf2.dataset import transform_images
 from yolov3_tf2.models import YoloV3, YoloV3Tiny
 from yolov3_tf2.utils import draw_outputs
-from threading import Timer
+from threading import Timer, Thread
 
 flags.DEFINE_string("classes", "./data/coco.names", "path to classes file")
-flags.DEFINE_string("weights", "./checkpoints/yolov3.tf", "path to weights file")
+flags.DEFINE_string("weights", "./checkpoints/yolov3-cardgame.tf", "path to weights file")
 flags.DEFINE_boolean("tiny", False, "yolov3 or yolov3-tiny")
 flags.DEFINE_integer("size", 608, "resize images to")
 flags.DEFINE_string(
-    "video", "./data/video.mp4", "path to video file or number for webcam)"
+    "video", "0", "path to video file or number for webcam)"
 )
 flags.DEFINE_string("output", None, "path to output video")
 flags.DEFINE_string(
     "output_format", "XVID", "codec used in VideoWriter when saving video to file"
 )
-flags.DEFINE_integer("num_classes", 80, "number of classes in the model")
+flags.DEFINE_integer("num_classes", 52, "number of classes in the model")
 
 found_cards=[]
 found_cards_strings=[]
 timer_running=False
 nb_of_cards=0
 time_to_wait_for_clear=10
+input_image=cv2.VideoCapture().read
 
 
-def test():
+
+def test_for_reset():
     global found_cards, found_cards_strings, nb_of_cards, timer_running
 
     found_cards=[]
@@ -40,17 +42,10 @@ def test():
     timer_running = False
     nb_of_cards = 0
 
-    
-
-
-def main(_argv):
+def show_changed_image(out):
 
     global timer_running, found_cards, found_cards_strings, nb_of_cards
 
-
-    physical_devices = tf.config.experimental.list_physical_devices("GPU")
-    if len(physical_devices) > 0:
-        tf.config.experimental.set_memory_growth(physical_devices[0], True)
 
     if FLAGS.tiny:
         yolo = YoloV3Tiny(classes=FLAGS.num_classes)
@@ -65,33 +60,14 @@ def main(_argv):
 
     times = []
 
-    try:
-        vid = cv2.VideoCapture(int(FLAGS.video))
-    except:
-        vid = cv2.VideoCapture(FLAGS.video)
-
-    out = None
-
-    if FLAGS.output:
-        # by default VideoCapture returns float instead of int
-        width = int(vid.get(cv2.CAP_PROP_FRAME_WIDTH))
-        height = int(vid.get(cv2.CAP_PROP_FRAME_HEIGHT))
-        fps = int(vid.get(cv2.CAP_PROP_FPS))
-        codec = cv2.VideoWriter_fourcc(*FLAGS.output_format)
-        out = cv2.VideoWriter(FLAGS.output, codec, fps, (width, height))
-    
-    #timer = Timer(5.0, test) 
-
-
     while True:
-        _, img = vid.read()
-
-        if img is None:
+    
+        if input_image is None:
             logging.warning("Empty Frame")
             time.sleep(0.1)
             continue
 
-        img_in = tf.expand_dims(img, 0)
+        img_in = tf.expand_dims(input_image, 0)
         img_in = transform_images(img_in, FLAGS.size)
 
         t1 = time.time()
@@ -100,7 +76,7 @@ def main(_argv):
         times.append(t2 - t1)
         times = times[-20:]
 
-        img = draw_outputs(img, (boxes, scores, classes, nums), class_names)
+        img = draw_outputs(input_image, (boxes, scores, classes, nums), class_names)
 
         img = cv2.putText(
             img,
@@ -116,7 +92,7 @@ def main(_argv):
 
         if nums==0:
             if timer_running==False:
-                timer = Timer(time_to_wait_for_clear, test) 
+                timer = Timer(time_to_wait_for_clear, test_for_reset) 
                 timer.start() 
                 timer_running=True
         else:
@@ -148,10 +124,60 @@ def main(_argv):
 
         if FLAGS.output:
             out.write(img)
-        cv2.imshow("output", img)
+
+        cv2.imshow("Parsed Image", img)
+
+
         if cv2.waitKey(1) == ord("q"):
             timer.cancel()
             timer_running=False
+            break
+
+    cv2.destroyAllWindows()
+
+
+def main(_argv):
+
+    global timer_running, found_cards, found_cards_strings, nb_of_cards, input_image
+
+    physical_devices = tf.config.experimental.list_physical_devices("GPU")
+
+    if len(physical_devices) > 0:
+        tf.config.experimental.set_memory_growth(physical_devices[0], True)
+
+    try:
+        vid = cv2.VideoCapture(int(FLAGS.video))
+    except:
+        vid = cv2.VideoCapture(FLAGS.video)
+
+    out = None
+
+    if FLAGS.output:
+        # by default VideoCapture returns float instead of int
+        width = int(vid.get(cv2.CAP_PROP_FRAME_WIDTH))
+        height = int(vid.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        fps = int(vid.get(cv2.CAP_PROP_FPS))
+        codec = cv2.VideoWriter_fourcc(*FLAGS.output_format)
+        out = cv2.VideoWriter(FLAGS.output, codec, fps, (width, height))
+    
+    _, input_image = vid.read()
+
+    t = Thread(target=show_changed_image, args=[out])
+    t.start()
+
+    while True:
+        _, input_image = vid.read()
+        if input_image is None:
+            logging.warning("Empty Frame")
+            time.sleep(0.1)
+            continue
+
+
+        cv2.imshow("Input Image", input_image)
+
+
+        if cv2.waitKey(1) == ord("q"):
+            end_program=True
             break
 
     cv2.destroyAllWindows()
