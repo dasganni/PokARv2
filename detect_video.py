@@ -44,7 +44,7 @@ def test_for_reset():
 
 def show_changed_image(out):
 
-    global timer_running, found_cards, found_cards_strings, nb_of_cards
+    global found_cards, found_cards_strings, nb_of_cards, timer_running
 
 
     if FLAGS.tiny:
@@ -138,7 +138,7 @@ def show_changed_image(out):
 
 def main(_argv):
 
-    global timer_running, found_cards, found_cards_strings, nb_of_cards, input_image
+    global input_image
 
     physical_devices = tf.config.experimental.list_physical_devices("GPU")
 
