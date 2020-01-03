@@ -1,13 +1,15 @@
 from Poker_Game import *
 from enum import Enum
 
-c1 = poker_card(Ranks.Ten, Suits.Hearts)
+c1 = poker_card(Ranks.Queen, Suits.Hearts)
 c2 = poker_card(Ranks.Ten, Suits.Hearts)
-c3 = poker_card(Ranks.Ace, Suits.Hearts)
-c4 = poker_card(Ranks.Ace, Suits.Hearts)
-c5 = poker_card(Ranks.Queen, Suits.Hearts)
+c3 = poker_card(Ranks.Jack, Suits.Spades)
+c4 = poker_card(Ranks.Eight, Suits.Hearts)
+c5 = poker_card(Ranks.Nine, Suits.Hearts)
 
-h1 = Hand([c1,c2,c3,c4])
+c6 = poker_card(Ranks.Queen, Suits.Clubs)
+
+h1 = Hand([c1,c2,c3,c4,c5,c6])
 
 h1.print_hand()
 h1.get_hand()

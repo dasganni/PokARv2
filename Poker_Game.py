@@ -39,16 +39,27 @@ class Hand:
 
     def is_straight(self):
         poker_card_values=[]
+        straight_count = 0
+
+        
+        
         if self.poker_cards and len(self.poker_cards)>=5:
     
             for c in self.poker_cards:
                 poker_card_values.append(c.rank.value)
+            s = set(poker_card_values)
+            poker_card_values = list(s)
             poker_card_values.sort()
+            
 
-            for i in range(4):
+            for i in range(len(poker_card_values)-1):
                 if poker_card_values[i] != poker_card_values[i+1]-1:
-                    return False
-            return True
+                    straight_count = 0
+                else:
+                    straight_count +=1
+                    if straight_count == 4:
+                        return True
+            
         return False
             
     def count_rank(self,rank):
