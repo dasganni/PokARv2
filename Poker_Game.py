@@ -139,7 +139,7 @@ class Hand:
             for c in self.poker_cards:
                 poker_card_values.append(c.rank.value)
             poker_card_values.sort()
-            return poker_card_values[4] 
+            return poker_card_values[len-1] 
         return None
 
     def get_hand(self):
@@ -182,4 +182,17 @@ class Hand:
         if v1 > v2: return "Player 1 won with " + self.name
         elif v1 < v2: return "Player 2 won with " + hand2.name
         else: return " Draw with " + self.name
+
+    def find_value(self,v):
+        valuecards=[]
+        for c in self.poker_cards:
+            if c.rank.value == v: valuecards.append(c)
+        return valuecards
+    
+    def find_suits(self,s):
+        suitcards=[]
+        for c in self.poker_cards:
+            if c.suit.name == s: suitcards.append(c)
+        return suitcards
+        
 
