@@ -9,11 +9,16 @@ c5 = poker_card(Ranks.Ace, Suits.Hearts)
 
 c6 = poker_card(Ranks.Queen, Suits.Clubs)
 
-h1 = Hand([c1,c2,c3,c4,c5,c6])
+h1 = Hand([c1,c6])
+h2 = Hand([c1,c1,c1,c1,c1])
 
 h1.print_hand()
 h1.get_hand()
+h2.get_hand()
 
 #print(h1.is_royal() and h1.is_flush())
 #print(h1.is_flush())
 print(h1.name)
+
+print(h1.compare(h2))
+

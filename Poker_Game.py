@@ -20,7 +20,9 @@ class poker_card:
 
 class Hand:
     poker_cards = []
+    counting_cards = []
     name = Hands.none.name
+
 
     def __init__(self, poker_cards):
         self.poker_cards = poker_cards
@@ -172,3 +174,12 @@ class Hand:
             self.name = Hands.high_card.name
 
         return self.name
+    
+    def compare(self,hand2):
+        v1 = Hands[self.name].value
+        v2 = Hands[hand2.name].value
+
+        if v1 > v2: return "Player 1 won with " + self.name
+        elif v1 < v2: return "Player 2 won with " + hand2.name
+        else: return " Draw with " + self.name
+
