@@ -37,7 +37,7 @@ class Hand:
         handcards=''
         for c in self.poker_cards:
             handcards = handcards + c.display() + ', '
-        print('Your Hand: ' + handcards)
+        return handcards
 
     def is_straight(self):
         poker_card_values=[]
