@@ -139,7 +139,7 @@ class Hand:
             for c in self.poker_cards:
                 poker_card_values.append(c.rank.value)
             poker_card_values.sort()
-            return poker_card_values[len-1] 
+            return poker_card_values[len(poker_card_values)-1] 
         return None
 
     def get_hand(self):
