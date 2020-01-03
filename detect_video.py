@@ -42,9 +42,9 @@ exit_program = False
 actualHand = [[], []]
 
 font = cv2.FONT_HERSHEY_SIMPLEX
-fontsize = 1
+fontsize = 0.5
 fontColor = (255, 255, 255)
-thickness = 2
+thickness = 1
 lineType = 2
 
 
@@ -224,7 +224,7 @@ def main(_argv):
         # merge the two camera stream into one window
         input_images_horizontal = np.hstack((input_image, input_image2))
 
-        # put text on the image
+        ############### overlay #####################
         # print(actualHand.get_hand())
         if not actualHand[0]:
             text = "Player 1: No Cards visible!"
@@ -234,7 +234,7 @@ def main(_argv):
         textsize = cv2.getTextSize(text, font, fontsize, 2)[0]
 
         textX = int((input_images_horizontal.shape[1] - textsize[0]) / 2)
-        textY = int((input_images_horizontal.shape[0] + textsize[1]) / 9)
+        textY = int((input_images_horizontal.shape[0] + textsize[1]) / 20)
         cv2.putText(
             img=input_images_horizontal,
             text=text,
@@ -245,6 +245,24 @@ def main(_argv):
             thickness=thickness,
             lineType=lineType,
         )
+
+        if actualHand[0]:
+            text = "Player 1's best Hand: " + actualHand[0].get_hand()
+
+            textsize = cv2.getTextSize(text, font, fontsize, 2)[0]
+
+            textX = int((input_images_horizontal.shape[1] - textsize[0]) / 2)
+            textY = int((input_images_horizontal.shape[0] + textsize[1]) / 10)
+            cv2.putText(
+                img=input_images_horizontal,
+                text=text,
+                org=(textX, textY),
+                fontFace=font,
+                fontScale=fontsize,
+                color=fontColor,
+                thickness=thickness,
+                lineType=lineType,
+            )
 
         # put text on the image
         # print(actualHand.get_hand())
@@ -256,7 +274,7 @@ def main(_argv):
         textsize = cv2.getTextSize(text, font, fontsize, 2)[0]
 
         textX = int((input_images_horizontal.shape[1] - textsize[0]) / 2)
-        textY = int((input_images_horizontal.shape[0] + textsize[1]) / 6)
+        textY = int((input_images_horizontal.shape[0] + textsize[1]) / 5)
         cv2.putText(
             img=input_images_horizontal,
             text=text,
@@ -267,6 +285,26 @@ def main(_argv):
             thickness=thickness,
             lineType=lineType,
         )
+
+        if actualHand[1]:
+            text = "Player 2's best Hand: " + actualHand[1].get_hand()
+
+            textsize = cv2.getTextSize(text, font, fontsize, 2)[0]
+
+            textX = int((input_images_horizontal.shape[1] - textsize[0]) / 2)
+            textY = int((input_images_horizontal.shape[0] + textsize[1]) / 4)
+            cv2.putText(
+                img=input_images_horizontal,
+                text=text,
+                org=(textX, textY),
+                fontFace=font,
+                fontScale=fontsize,
+                color=fontColor,
+                thickness=thickness,
+                lineType=lineType,
+            )
+
+        ########## end overlay ###############
 
         # display all the windows, first the camera input, secondly after yolo is loaded, the processed image
         cv2.imshow("Input-Images", input_images_horizontal)
