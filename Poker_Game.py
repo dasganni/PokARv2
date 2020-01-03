@@ -41,8 +41,6 @@ class Hand:
         poker_card_values=[]
         straight_count = 0
 
-        
-        
         if self.poker_cards and len(self.poker_cards)>=5:
     
             for c in self.poker_cards:
@@ -79,17 +77,22 @@ class Hand:
         return counter
 
     def is_royal(self):
+
         poker_card_values=[]
-        
+        royal = [10,11,12,13,14]
+
         if self.poker_cards and len(self.poker_cards)>=5:
+    
             for c in self.poker_cards:
                 poker_card_values.append(c.rank.value)
+            s = set(poker_card_values)
+            poker_card_values = list(s)
             poker_card_values.sort()
-            if poker_card_values[0] == 10 and poker_card_values[1] == 11 and poker_card_values[2] == 12 and poker_card_values[3] == 13 and poker_card_values[4] == 14:
-                return True
-            else:
-                return False
-        return False
+
+            if list(set(poker_card_values).intersection(royal)) == royal: return True 
+            else: return False
+
+
 
     def is_flush(self):
         for s in Suits:

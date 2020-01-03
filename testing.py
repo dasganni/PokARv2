@@ -3,9 +3,9 @@ from enum import Enum
 
 c1 = poker_card(Ranks.Queen, Suits.Hearts)
 c2 = poker_card(Ranks.Ten, Suits.Hearts)
-c3 = poker_card(Ranks.Jack, Suits.Spades)
-c4 = poker_card(Ranks.Eight, Suits.Hearts)
-c5 = poker_card(Ranks.Nine, Suits.Hearts)
+c3 = poker_card(Ranks.Jack, Suits.Hearts)
+c4 = poker_card(Ranks.King, Suits.Hearts)
+c5 = poker_card(Ranks.Ace, Suits.Hearts)
 
 c6 = poker_card(Ranks.Queen, Suits.Clubs)
 
