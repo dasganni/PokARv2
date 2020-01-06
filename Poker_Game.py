@@ -55,11 +55,13 @@ class Hand:
             for i in range(len(poker_card_values)-1):
                 if poker_card_values[i] != poker_card_values[i+1]-1:
                     straight_count = 0
+                    self.counting_cards = []
                 else:
                     straight_count +=1
+                    self.counting_cards += self.find_value(poker_card_values[i])
                     if straight_count == 4:
                         return True
-            
+        self.counting_cards = []    
         return False
             
     def count_rank(self,rank):
@@ -91,15 +93,22 @@ class Hand:
             poker_card_values = list(s)
             poker_card_values.sort()
 
-            if list(set(poker_card_values).intersection(royal)) == royal: return True 
-            else: return False
+            if list(set(poker_card_values).intersection(royal)) == royal: 
+                for c in royal:
+                    self.counting_cards += self.find_value(c)
+                return True 
+            else:
+                self.counting_cards = []
+                return False
 
 
 
     def is_flush(self):
         for s in Suits:
             if self.count_suits(s) >= 5:
+                self.counting_cards = self.find_suits(s.name)
                 return True
+        self.counting_cards = []
         return False
 
     def is_straight_flush(self):
@@ -108,13 +117,17 @@ class Hand:
     def is_quads(self):
         for r in Ranks:
             if self.count_rank(r) == 4:
+                self.counting_cards = self.find_value(r.value)
                 return True
+        self.counting_cards = []
         return False
 
     def is_trips(self):
         for r in Ranks:
             if self.count_rank(r) >= 3:
+                self.counting_cards += self.find_value(r.value)
                 return True
+        self.counting_cards = []
         return False
 
 
@@ -122,15 +135,19 @@ class Hand:
         pairs = 0
         for r in Ranks:
             if self.count_rank(r) == 2:
+                self.counting_cards += self.find_value(r.value)
                 pairs += 1
             if pairs >= 2:
                return True
+        self.counting_cards = []
         return False
 
     def is_pair(self):
         for r in Ranks:
             if self.count_rank(r) == 2:
+                self.counting_cards += self.find_value(r.value)
                 return True
+        self.counting_cards = []
         return False
 
     def get_highest(self):
@@ -139,7 +156,8 @@ class Hand:
             for c in self.poker_cards:
                 poker_card_values.append(c.rank.value)
             poker_card_values.sort()
-            return poker_card_values[len(poker_card_values)-1] 
+            self.counting_cards = self.find_value(poker_card_values[len(poker_card_values)-1])
+            return self.find_value(poker_card_values[len(poker_card_values)-1]) 
         return None
 
     def get_hand(self):
