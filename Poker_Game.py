@@ -39,6 +39,12 @@ class Hand:
             handcards = handcards + c.display() + ', '
         return handcards
 
+    def print_bestHand(self):
+        handcards=''
+        for c in self.counting_cards:
+            handcards = handcards + c.display() + ', '
+        return handcards
+
     def is_straight(self):
         poker_card_values=[]
         straight_count = 0
