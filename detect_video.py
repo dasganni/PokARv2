@@ -44,8 +44,8 @@ actualHand = [[], []]
 font = cv2.FONT_HERSHEY_SIMPLEX
 fontsize = 0.5
 fontColor = (255, 255, 255)
-thickness = 1
-lineType = 2
+thickness = 2
+lineType = 10
 
 
 def test_for_reset():
@@ -136,7 +136,7 @@ def show_changed_image(out):
 
             card_name = class_names[int(classes[i])]
 
-            if card_name not in found_cards_strings[iterator] and scores[i] >= 0.95:
+            if card_name not in found_cards_strings[iterator] and scores[i] >= 0.9:
                 found_cards_strings[iterator].append(card_name)
                 splitted_card_name = card_name.split("-", 2)
                 card = poker_card(
@@ -225,7 +225,7 @@ def main(_argv):
         input_images_horizontal = np.hstack((input_image, input_image2))
 
         ############### overlay #####################
-        # print(actualHand.get_hand())
+        # Player1 Text
         if not actualHand[0]:
             text = "Player 1: No Cards visible!"
         else:
@@ -241,7 +241,7 @@ def main(_argv):
             org=(textX, textY),
             fontFace=font,
             fontScale=fontsize,
-            color=fontColor,
+            color=(0,255,0),
             thickness=thickness,
             lineType=lineType,
         )
@@ -259,13 +259,12 @@ def main(_argv):
                 org=(textX, textY),
                 fontFace=font,
                 fontScale=fontsize,
-                color=fontColor,
+                color=(0,255,0),
                 thickness=thickness,
                 lineType=lineType,
             )
 
-        # put text on the image
-        # print(actualHand.get_hand())
+        #Player2-Text
         if not actualHand[1]:
             text = "Player 2: No Cards visible!"
         else:
@@ -281,7 +280,7 @@ def main(_argv):
             org=(textX, textY),
             fontFace=font,
             fontScale=fontsize,
-            color=fontColor,
+            color=(255,0,0),
             thickness=thickness,
             lineType=lineType,
         )
@@ -299,7 +298,34 @@ def main(_argv):
                 org=(textX, textY),
                 fontFace=font,
                 fontScale=fontsize,
-                color=fontColor,
+                color=(255,0,0),
+                thickness=thickness,
+                lineType=lineType,
+            )
+
+        if actualHand[0] and actualHand[1]:
+
+            #Comparison of the two players + text overlay
+            actualWinner = actualHand[0].compareHands(actualHand[1]) #compares the first with the second player for an actual better hand
+
+            if actualWinner == 1:
+                text = "Player 1 is winning at the moment!"
+            elif actualWinner == 2:
+                text = "Player 2 is winning at the moment!"
+            else:
+                text = "The two players hands are a draw at the moment!"
+
+            textsize = cv2.getTextSize(text, font, fontsize, 2)[0]
+
+            textX = int((input_images_horizontal.shape[1] - textsize[0]) / 2)
+            textY = int((input_images_horizontal.shape[0] + textsize[1]) / 3)
+            cv2.putText(
+                img=input_images_horizontal,
+                text=text,
+                org=(textX, textY),
+                fontFace=font,
+                fontScale=fontsize,
+                color=(0,0,255),
                 thickness=thickness,
                 lineType=lineType,
             )

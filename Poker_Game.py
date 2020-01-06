@@ -175,11 +175,11 @@ class Hand:
 
         return self.name
     
-    def compare(self,hand2):
+    def compareHands(self,hand2):
         v1 = Hands[self.name].value
         v2 = Hands[hand2.name].value
 
-        if v1 > v2: return "Player 1 won with " + self.name
-        elif v1 < v2: return "Player 2 won with " + hand2.name
-        else: return " Draw with " + self.name
+        if v1 > v2: return 1
+        elif v1 < v2: return 2
+        else: return 3
 
