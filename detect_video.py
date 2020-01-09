@@ -136,7 +136,7 @@ def show_changed_image(out):
 
             card_name = class_names[int(classes[i])]
 
-            if card_name not in found_cards_strings[iterator] and scores[i] >= 0.9:
+            if card_name not in found_cards_strings[iterator] and scores[i] >= 0.93:
                 found_cards_strings[iterator].append(card_name)
                 splitted_card_name = card_name.split("-", 2)
                 card = poker_card(
@@ -243,7 +243,7 @@ def main(_argv):
             org=(textX, textY),
             fontFace=font,
             fontScale=fontsize,
-            color=(0,255,0),
+            color=(255, 255, 255),
             thickness=thickness,
             lineType=lineType,
         )
@@ -261,7 +261,7 @@ def main(_argv):
                 org=(textX, textY),
                 fontFace=font,
                 fontScale=fontsize,
-                color=(0,255,0),
+                color=(255, 255, 255),
                 thickness=thickness,
                 lineType=lineType,
             )
@@ -282,7 +282,7 @@ def main(_argv):
             org=(textX, textY),
             fontFace=font,
             fontScale=fontsize,
-            color=(255,0,0),
+            color=(255, 255, 255),
             thickness=thickness,
             lineType=lineType,
         )
@@ -300,7 +300,7 @@ def main(_argv):
                 org=(textX, textY),
                 fontFace=font,
                 fontScale=fontsize,
-                color=(255,0,0),
+                color=(255, 255, 255),
                 thickness=thickness,
                 lineType=lineType,
             )
@@ -331,7 +331,7 @@ def main(_argv):
                 org=(textX, textY),
                 fontFace=font,
                 fontScale=fontsize,
-                color=(0,0,255),
+                color=(255, 255, 255),
                 thickness=thickness,
                 lineType=lineType,
             )
