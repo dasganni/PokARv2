@@ -139,10 +139,13 @@ class Hand:
             s = set(poker_card_values)
             poker_card_values = list(s)
             poker_card_values.sort()
+            temp_array = self.relevant_cards
+            self.relevant_cards = []
+            
 
             if list(set(poker_card_values).intersection(royal)) == royal: 
                 for c in royal:
-                    self.relevant_cards += self.find_value_relevant(c)
+                    self.relevant_cards += self.find_value_array(c,temp_array)
                 return True 
             else:
                 self.relevant_cards = []
@@ -319,9 +322,9 @@ class Hand:
             if c.rank.value == v: valuecards.append(c)
         return valuecards
 
-    def find_value_relevant(self,v):
+    def find_value_array(self,v,array):
         valuecards=[]
-        for c in self.relevant_cards:
+        for c in array:
             if c.rank.value == v: valuecards.append(c)
         return valuecards
     
