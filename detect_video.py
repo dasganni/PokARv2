@@ -229,7 +229,7 @@ def main(_argv):
         if not actualHand[0]:
             text = "Player 1: No Cards visible!"
         else:
-            text = "Player 1 Cards: " + actualHand[0].print_hand()
+            text = "Player 1 Cards: " + actualHand[0].print_bestHand()
 
         textsize = cv2.getTextSize(text, font, fontsize, 2)[0]
 
@@ -268,7 +268,7 @@ def main(_argv):
         if not actualHand[1]:
             text = "Player 2: No Cards visible!"
         else:
-            text = "Player 2 Cards: " + actualHand[1].print_hand()
+            text = "Player 2 Cards: " + actualHand[1].print_bestHand()
 
         textsize = cv2.getTextSize(text, font, fontsize, 2)[0]
 

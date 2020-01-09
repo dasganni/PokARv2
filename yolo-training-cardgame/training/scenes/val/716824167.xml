@@ -1,0 +1,37 @@
+<annotation>
+        <folder>FOLDER</folder>
+        <filename>716824167.jpg</filename>
+        <path>data/scenes/val\716824167.jpg</path>
+        <source>
+                <database>Unknown</database>
+        </source>
+        <size>
+                <width>720</width>
+                <height>720</height>
+                <depth>3</depth>
+        </size>
+ <object>
+                <name>3s</name>
+                <pose>Unspecified</pose>
+                <truncated>0</truncated>
+                <difficult>0</difficult>
+                <bndbox>
+                        <xmin>439</xmin>
+                        <ymin>218</ymin>
+                        <xmax>500</xmax>
+                        <ymax>289</ymax>
+                </bndbox>
+        </object>
+ <object>
+                <name>3s</name>
+                <pose>Unspecified</pose>
+                <truncated>0</truncated>
+                <difficult>0</difficult>
+                <bndbox>
+                        <xmin>152</xmin>
+                        <ymin>117</ymin>
+                        <xmax>215</xmax>
+                        <ymax>190</ymax>
+                </bndbox>
+        </object>
+</annotation>        
