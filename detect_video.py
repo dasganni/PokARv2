@@ -170,6 +170,8 @@ def main(_argv):
 
     global input_image, input_image2, exit_program
 
+    print("bla")
+
     # check for the used hardware
     physical_devices = tf.config.experimental.list_physical_devices("GPU")
 
@@ -310,8 +312,12 @@ def main(_argv):
 
             if actualWinner == 1:
                 text = "Player 1 is winning at the moment!"
+                if actualHand[0].kicker_card:
+                    text = "Player 1 is winning with the Kicker Card " + actualHand[0].get_kicker_card() + " at the moment!"
             elif actualWinner == 2:
                 text = "Player 2 is winning at the moment!"
+                if actualHand[0].kicker_card:
+                    text = "Player 2 is winning with the Kicker Card " + actualHand[0].get_kicker_card() + " at the moment!"
             else:
                 text = "The two players hands are a draw at the moment!"
 

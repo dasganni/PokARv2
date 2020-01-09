@@ -20,8 +20,9 @@ class poker_card:
 
 class Hand:
     poker_cards = []
-    counting_cards = []
+    relevant_cards = []
     name = Hands.none.name
+    kicker_card = None
 
 
     def __init__(self, poker_cards):
@@ -41,9 +42,12 @@ class Hand:
 
     def print_bestHand(self):
         handcards=''
-        for c in self.counting_cards:
+        for c in self.relevant_cards:
             handcards = handcards + c.display() + ', '
         return handcards
+
+    def get_kicker_card(self):
+        return self.kicker_card[0].display()
 
     def is_straight(self):
         poker_card_values=[]
@@ -61,13 +65,13 @@ class Hand:
             for i in range(len(poker_card_values)-1):
                 if poker_card_values[i] != poker_card_values[i+1]-1:
                     straight_count = 0
-                    self.counting_cards = []
+                    self.relevant_cards = []
                 else:
                     straight_count +=1
-                    self.counting_cards += self.find_value(poker_card_values[i])
+                    self.relevant_cards += self.find_value(poker_card_values[i])
                     if straight_count == 4:
                         return True
-        self.counting_cards = []    
+        self.relevant_cards = []    
         return False
             
     def count_rank(self,rank):
@@ -101,10 +105,10 @@ class Hand:
 
             if list(set(poker_card_values).intersection(royal)) == royal: 
                 for c in royal:
-                    self.counting_cards += self.find_value(c)
+                    self.relevant_cards += self.find_value(c)
                 return True 
             else:
-                self.counting_cards = []
+                self.relevant_cards = []
                 return False
 
 
@@ -112,9 +116,9 @@ class Hand:
     def is_flush(self):
         for s in Suits:
             if self.count_suits(s) >= 5:
-                self.counting_cards = self.find_suits(s.name)
+                self.relevant_cards = self.find_suits(s.name)
                 return True
-        self.counting_cards = []
+        self.relevant_cards = []
         return False
 
     def is_straight_flush(self):
@@ -123,17 +127,17 @@ class Hand:
     def is_quads(self):
         for r in Ranks:
             if self.count_rank(r) == 4:
-                self.counting_cards = self.find_value(r.value)
+                self.relevant_cards = self.find_value(r.value)
                 return True
-        self.counting_cards = []
+        self.relevant_cards = []
         return False
 
     def is_trips(self):
         for r in Ranks:
             if self.count_rank(r) >= 3:
-                self.counting_cards += self.find_value(r.value)
+                self.relevant_cards += self.find_value(r.value)
                 return True
-        self.counting_cards = []
+        self.relevant_cards = []
         return False
 
 
@@ -141,30 +145,32 @@ class Hand:
         pairs = 0
         for r in Ranks:
             if self.count_rank(r) == 2:
-                self.counting_cards += self.find_value(r.value)
+                self.relevant_cards += self.find_value(r.value)
                 pairs += 1
             if pairs >= 2:
                return True
-        self.counting_cards = []
+        self.relevant_cards = []
         return False
 
     def is_pair(self):
         for r in Ranks:
             if self.count_rank(r) == 2:
-                self.counting_cards += self.find_value(r.value)
+                self.relevant_cards += self.find_value(r.value)
                 return True
-        self.counting_cards = []
+        self.relevant_cards = []
         return False
 
-    def get_highest(self):
+    def is_high_card(self):
         poker_card_values=[]
         if self.poker_cards:
             for c in self.poker_cards:
                 poker_card_values.append(c.rank.value)
             poker_card_values.sort()
-            self.counting_cards = self.find_value(poker_card_values[len(poker_card_values)-1])
-            return self.find_value(poker_card_values[len(poker_card_values)-1]) 
-        return None
+            self.relevant_cards = self.find_value(poker_card_values[len(poker_card_values)-1])
+            return True
+        self.relevant_cards = []
+        return False
+
 
     def get_hand(self):
         if self.is_royal() and self.is_flush():
@@ -194,8 +200,11 @@ class Hand:
         elif self.is_pair():
             self.name = Hands.pair.name
             
-        else:
+        elif self.is_high_card():
             self.name = Hands.high_card.name
+
+        else:
+            self.name = Hands.none.name
 
         return self.name
     
@@ -205,7 +214,57 @@ class Hand:
 
         if v1 > v2: return 1
         elif v1 < v2: return 2
-        else: return 3
+        else:
+            #add highest card added to pair and so on
+            #add unrelevant_cards to check kicker card
+            #check better straight or pair
+
+            relevant_card_values1=[]
+            relevant_card_values2=[]
+
+            for c in self.relevant_cards:
+                relevant_card_values1.append(c.rank.value)
+            for c in hand2.relevant_cards:
+                relevant_card_values2.append(c.rank.value)
+
+            relevant_card_values1.sort()
+            relevant_card_values2.sort()
+
+
+            if relevant_card_values1[len(relevant_card_values1)-1] > relevant_card_values2[len(relevant_card_values2)-1]:
+                return 1
+            elif relevant_card_values1[len(relevant_card_values1)-1] < relevant_card_values2[len(relevant_card_values2)-1]:
+                return 2
+
+            else:
+
+                unrelevant_cards1=[]
+                unrelevant_cards2=[]
+                unrelevant_card_values1=[]
+                unrelevant_card_values2=[]
+
+                if v1 == 1 or v1 == 2 or v1 == 3 or v1 == 4 or v1 == 8:
+                    unrelevant_cards1 = [x for x in self.poker_cards if x not in self.relevant_cards]
+                    unrelevant_cards2 = [x for x in hand2.poker_cards if x not in hand2.relevant_cards]
+
+                    for c in unrelevant_cards1:
+                        unrelevant_card_values1.append(c.rank.value)
+
+                    for c in unrelevant_cards2:
+                        unrelevant_card_values2.append(c.rank.value)
+
+                    if unrelevant_card_values1[len(unrelevant_card_values1)-1] > unrelevant_card_values2[len(unrelevant_card_values2)-1]:
+                        self.kicker_card = self.find_value(unrelevant_card_values1[len(unrelevant_card_values1)-1])
+                        return 1
+                    elif unrelevant_card_values1[len(unrelevant_card_values1)-1] < unrelevant_card_values2[len(unrelevant_card_values2)-1]:
+                        self.kicker_card = self.find_value(unrelevant_card_values2[len(unrelevant_card_values2)-1])
+                        return 2
+                    else: 
+                        return 3
+
+                #kicker card needed
+
+                return 3
 
     def find_value(self,v):
         valuecards=[]
