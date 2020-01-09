@@ -261,20 +261,21 @@ class Hand:
                     unrelevant_cards1 = [x for x in self.poker_cards if x not in self.relevant_cards]
                     unrelevant_cards2 = [x for x in hand2.poker_cards if x not in hand2.relevant_cards]
 
-                    for c in unrelevant_cards1:
-                        unrelevant_card_values1.append(c.rank.value)
+                    if unrelevant_cards1 and unrelevant_cards2:
+                        for c in unrelevant_cards1:
+                            unrelevant_card_values1.append(c.rank.value)
 
-                    for c in unrelevant_cards2:
-                        unrelevant_card_values2.append(c.rank.value)
+                        for c in unrelevant_cards2:
+                            unrelevant_card_values2.append(c.rank.value)
 
-                    if unrelevant_card_values1[len(unrelevant_card_values1)-1] > unrelevant_card_values2[len(unrelevant_card_values2)-1]:
-                        self.kicker_card = self.find_value(unrelevant_card_values1[len(unrelevant_card_values1)-1])
-                        return 1
-                    elif unrelevant_card_values1[len(unrelevant_card_values1)-1] < unrelevant_card_values2[len(unrelevant_card_values2)-1]:
-                        self.kicker_card = self.find_value(unrelevant_card_values2[len(unrelevant_card_values2)-1])
-                        return 2
-                    else: 
-                        return 3
+                        if unrelevant_card_values1[len(unrelevant_card_values1)-1] > unrelevant_card_values2[len(unrelevant_card_values2)-1]:
+                            self.kicker_card = self.find_value(unrelevant_card_values1[len(unrelevant_card_values1)-1])
+                            return 1
+                        elif unrelevant_card_values1[len(unrelevant_card_values1)-1] < unrelevant_card_values2[len(unrelevant_card_values2)-1]:
+                            self.kicker_card = self.find_value(unrelevant_card_values2[len(unrelevant_card_values2)-1])
+                            return 2
+                        else: 
+                            return 3
 
                 #kicker card needed
 
