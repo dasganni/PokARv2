@@ -8,7 +8,7 @@ c4 = poker_card(Ranks.King, Suits.Hearts)
 c5 = poker_card(Ranks.Ace, Suits.Clubs)
 
 c6 = poker_card(Ranks.Queen, Suits.Clubs)
-c7 = poker_card(Ranks.Two, Suits.Hearts)
+c7 = poker_card(Ranks.Nine, Suits.Hearts)
 
 h1 = Hand([c1,c2,c3,c4,c5,c6,c7])
 h2 = Hand([c1,c1,c1,c1,c1])

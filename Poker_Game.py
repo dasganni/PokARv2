@@ -80,6 +80,36 @@ class Hand:
         self.relevant_cards = []    
         return False
 
+
+    def is_straight_f(self):
+        poker_card_values=[]
+        
+        straight_count = 0
+
+        if self.relevant_cards and len(self.relevant_cards)>=5:
+    
+            for c in self.relevant_cards:
+                poker_card_values.append(c.rank.value)
+            s = set(poker_card_values)
+            poker_card_values = list(s)
+            poker_card_values.sort()
+            self.relevant_cards = []
+
+            for i in range(len(poker_card_values)-1,-1,-1):
+                if poker_card_values[i] == poker_card_values[i-1]+1:
+                    straight_count +=1
+                    self.relevant_cards += self.find_value(poker_card_values[i])
+                    if straight_count == 4:
+                        self.relevant_cards += self.find_value(poker_card_values[i-1])
+                        return True
+                elif poker_card_values[i] == poker_card_values[i-1]:
+                    straight_count = straight_count
+                else:
+                    straight_count = 0
+                    self.relevant_cards = []
+        self.relevant_cards = []    
+        return False
+
             
     def count_rank(self,rank):
         counter = 0
@@ -131,7 +161,7 @@ class Hand:
         return False
 
     def is_straight_flush(self):
-       return self.is_flush() and self.is_straight()
+       return self.is_flush() and self.is_straight_f()
       
 
     def is_quads(self):
