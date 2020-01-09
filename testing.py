@@ -5,10 +5,10 @@ c1 = poker_card(Ranks.Queen, Suits.Hearts)
 c2 = poker_card(Ranks.Ten, Suits.Hearts)
 c3 = poker_card(Ranks.Jack, Suits.Hearts)
 c4 = poker_card(Ranks.King, Suits.Hearts)
-c5 = poker_card(Ranks.Nine, Suits.Hearts)
+c5 = poker_card(Ranks.Ace, Suits.Clubs)
 
 c6 = poker_card(Ranks.Queen, Suits.Clubs)
-c7 = poker_card(Ranks.Two, Suits.Spades)
+c7 = poker_card(Ranks.Two, Suits.Hearts)
 
 h1 = Hand([c1,c2,c3,c4,c5,c6,c7])
 h2 = Hand([c1,c1,c1,c1,c1])
@@ -22,6 +22,6 @@ h2.get_hand()
 print(h1.name)
 
 
-for c in h1.counting_cards:
+for c in h1.relevant_cards:
     print(c.display())
 

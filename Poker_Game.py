@@ -79,6 +79,7 @@ class Hand:
                     self.relevant_cards = []
         self.relevant_cards = []    
         return False
+
             
     def count_rank(self,rank):
         counter = 0
@@ -98,12 +99,12 @@ class Hand:
 
     def is_royal(self):
         poker_card_values=[]
-        self.relevant_cards = []
+       # self.relevant_cards = []
         royal = [10,11,12,13,14]
 
         if self.poker_cards and len(self.poker_cards)>=5:
     
-            for c in self.poker_cards:
+            for c in self.relevant_cards:
                 poker_card_values.append(c.rank.value)
             s = set(poker_card_values)
             poker_card_values = list(s)
@@ -111,11 +112,12 @@ class Hand:
 
             if list(set(poker_card_values).intersection(royal)) == royal: 
                 for c in royal:
-                    self.relevant_cards += self.find_value(c)
+                    self.relevant_cards += self.find_value_relevant(c)
                 return True 
             else:
                 self.relevant_cards = []
                 return False
+                
 
 
 
@@ -283,6 +285,12 @@ class Hand:
     def find_value(self,v):
         valuecards=[]
         for c in self.poker_cards:
+            if c.rank.value == v: valuecards.append(c)
+        return valuecards
+
+    def find_value_relevant(self,v):
+        valuecards=[]
+        for c in self.relevant_cards:
             if c.rank.value == v: valuecards.append(c)
         return valuecards
     
