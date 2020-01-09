@@ -23,6 +23,8 @@ class Hand:
     counting_cards = []
     name = Hands.none.name
 
+    flush_suit = Suits.none.name
+
 
     def __init__(self, poker_cards):
         self.poker_cards = poker_cards
@@ -41,6 +43,7 @@ class Hand:
 
     def is_straight(self):
         poker_card_values=[]
+        self.counting_cards = []
         straight_count = 0
 
         if self.poker_cards and len(self.poker_cards)>=5:
@@ -52,15 +55,18 @@ class Hand:
             poker_card_values.sort()
             
 
-            for i in range(len(poker_card_values)-1):
-                if poker_card_values[i] != poker_card_values[i+1]-1:
-                    straight_count = 0
-                    self.counting_cards = []
-                else:
+            for i in range(len(poker_card_values)-1,-1,-1):
+                if poker_card_values[i] == poker_card_values[i-1]+1:
                     straight_count +=1
                     self.counting_cards += self.find_value(poker_card_values[i])
                     if straight_count == 4:
+                        self.counting_cards += self.find_value(poker_card_values[i-1])
                         return True
+                elif poker_card_values[i] == poker_card_values[i-1]:
+                    straight_count = straight_count
+                else:
+                    straight_count = 0
+                    self.counting_cards = []
         self.counting_cards = []    
         return False
             
@@ -81,8 +87,8 @@ class Hand:
         return counter
 
     def is_royal(self):
-
         poker_card_values=[]
+        self.counting_cards = []
         royal = [10,11,12,13,14]
 
         if self.poker_cards and len(self.poker_cards)>=5:
@@ -107,12 +113,14 @@ class Hand:
         for s in Suits:
             if self.count_suits(s) >= 5:
                 self.counting_cards = self.find_suits(s.name)
+                self.flush_suit = s.name
                 return True
         self.counting_cards = []
         return False
 
     def is_straight_flush(self):
-       return self.is_straight() and self.is_flush()
+       return self.is_flush() and self.is_straight()
+      
 
     def is_quads(self):
         for r in Ranks:
@@ -161,10 +169,16 @@ class Hand:
         return None
 
     def get_hand(self):
-        if self.is_royal() and self.is_flush():
+        if self.is_flush() and self.is_royal():
+            for f in self.counting_cards:
+                if f.suit.name != self.flush_suit:
+                    self.counting_cards.remove(f)
             self.name = Hands.royal_flush.name
             
         elif self.is_straight_flush():
+            for f in self.counting_cards:
+                if f.suit.name != self.flush_suit:
+                    self.counting_cards.remove(f)
             self.name = Hands.straight_flush.name
             
         elif self.is_quads():
