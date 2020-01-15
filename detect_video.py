@@ -138,7 +138,7 @@ def show_changed_image(out):
 
             card_name = class_names[int(classes[i])]
 
-            if card_name not in found_cards_strings[iterator] and scores[i] >= 0.94:
+            if card_name not in found_cards_strings[iterator] and scores[i] >= 0.98:
                 found_cards_strings[iterator].append(card_name)
                 splitted_card_name = card_name.split("-", 2)
                 card = poker_card(
