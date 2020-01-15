@@ -97,11 +97,13 @@ def show_changed_image(out):
             continue
 
         # yolo prediction along with drawing on the images
-        img_in = tf.expand_dims(temp_image, 0)
+        img_in = cv2.cvtColor(temp_image, cv2.COLOR_BGR2RGB) 
+        img_in = tf.expand_dims(img_in, 0)
         img_in = transform_images(img_in, FLAGS.size)
 
         t1 = time.time()
         boxes, scores, classes, nums = yolo.predict(img_in)
+
         t2 = time.time()
         times.append(t2 - t1)
         times = times[-20:]
@@ -136,7 +138,7 @@ def show_changed_image(out):
 
             card_name = class_names[int(classes[i])]
 
-            if card_name not in found_cards_strings[iterator] and scores[i] >= 0.93:
+            if card_name not in found_cards_strings[iterator] and scores[i] >= 0.94:
                 found_cards_strings[iterator].append(card_name)
                 splitted_card_name = card_name.split("-", 2)
                 card = poker_card(
