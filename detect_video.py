@@ -43,7 +43,7 @@ actualHand = [[], []]
 
 font = cv2.FONT_HERSHEY_SIMPLEX
 fontsize = 0.5
-fontColor = (255, 255, 255)
+fontColor = (0, 0, 0)
 thickness = 2
 lineType = 10
 
@@ -116,7 +116,7 @@ def show_changed_image(out):
             (0, 30),
             cv2.FONT_HERSHEY_COMPLEX_SMALL,
             1,
-            (0, 0, 255),
+            (fontColor),
             2,
         )
 
@@ -245,7 +245,7 @@ def main(_argv):
             org=(textX, textY),
             fontFace=font,
             fontScale=fontsize,
-            color=(255, 255, 255),
+            color=(fontColor),
             thickness=thickness,
             lineType=lineType,
         )
@@ -263,7 +263,7 @@ def main(_argv):
                 org=(textX, textY),
                 fontFace=font,
                 fontScale=fontsize,
-                color=(255, 255, 255),
+                color=(fontColor),
                 thickness=thickness,
                 lineType=lineType,
             )
@@ -284,7 +284,7 @@ def main(_argv):
             org=(textX, textY),
             fontFace=font,
             fontScale=fontsize,
-            color=(255, 255, 255),
+            color=(fontColor),
             thickness=thickness,
             lineType=lineType,
         )
@@ -302,7 +302,7 @@ def main(_argv):
                 org=(textX, textY),
                 fontFace=font,
                 fontScale=fontsize,
-                color=(255, 255, 255),
+                color=(fontColor),
                 thickness=thickness,
                 lineType=lineType,
             )
@@ -333,7 +333,7 @@ def main(_argv):
                 org=(textX, textY),
                 fontFace=font,
                 fontScale=fontsize,
-                color=(255, 255, 255),
+                color=(fontColor),
                 thickness=thickness,
                 lineType=lineType,
             )
